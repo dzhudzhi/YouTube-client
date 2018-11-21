@@ -5,7 +5,6 @@ class VideoListItem {
     const img = document.createElement('img');
     img.src = video.thumbnails.default.url;
     this.elem.appendChild(img);
-    console.log(video);
   }
 }
 
