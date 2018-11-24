@@ -1,0 +1,12 @@
+.video__item {
+  display: flex;
+  flex-direction: column;
+  width: 330px;
+  height: 500px;
+  overflow: hidden;
+}
+.video__item img {
+  align-self: center;
+}
+.video__item-description {
+}

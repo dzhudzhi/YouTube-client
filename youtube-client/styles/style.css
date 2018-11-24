@@ -1,0 +1,17 @@
+@import './search-form.css';
+@import './video-list.css';
+@import './video-item.css';
+@import './pager.css';
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper {
+  margin: 0 auto;
+}
+
+.carusel {
+  overflow: hidden;
+}
