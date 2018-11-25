@@ -1,0 +1,37 @@
+@import './video-item.css';
+@import './pager.css';
+
+* {
+  margin: 0;
+  padding: 0;
+}
+.wrapper {
+  margin: 0 auto;
+}
+.carusel {
+  overflow: hidden;
+  margin: 0 auto;
+  user-select: none;
+}
+.search-form {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+.search-form input {
+  width: 250px;
+  height: 25px;
+  padding: 0 5px;
+}
+.search-form button {
+  width: 65px;
+  padding: 0 10px;
+}
+.video-list {
+  display: flex;
+  width: 999999px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: 250ms;
+}

@@ -1,0 +1,18 @@
+.pager {
+  display: flex;
+  justify-content: center;
+  margin: 15px;
+}
+.video-numbers {
+  overflow: hidden;
+  margin: 0 20px;
+}
+.video-numbers ul{
+  list-style: none;
+  display: flex;
+  width: 99999px;
+}
+.video-numbers ul li{
+  width: 20px;
+  text-align: center;
+}
