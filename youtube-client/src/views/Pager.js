@@ -2,11 +2,6 @@ class Pager {
   constructor() {
     const pager = document.createElement('div');
     pager.className = 'pager';
-    document.querySelector('.wrapper').appendChild(pager);
-  }
-
-  draw(pages) {
-    const fragment = document.createDocumentFragment();
 
     const prevButton = document.createElement('button');
     prevButton.classList.add('prev');
@@ -18,18 +13,23 @@ class Pager {
 
     const videoNumbers = document.createElement('div');
     videoNumbers.className = 'video-numbers';
-    pages.forEach((x) => {
-      const num = document.createElement('span');
-      num.textContent = x;
-      videoNumbers.appendChild(num);
-    });
+    const ul = document.createElement('ul');
+    videoNumbers.appendChild(ul);
 
-    fragment.appendChild(prevButton);
-    fragment.appendChild(videoNumbers);
-    fragment.appendChild(nextButton);
+    pager.appendChild(prevButton);
+    pager.appendChild(videoNumbers);
+    pager.appendChild(nextButton);
 
-    document.querySelector('.pager').innerHTML = '';
-    document.querySelector('.pager').appendChild(fragment);
+    pager.style.visibility = 'hidden';
+
+    document.querySelector('.wrapper').appendChild(pager);
+  }
+
+  draw() {
+    document.querySelector('.pager').style.visibility = 'visible';
+    const docWidth = document.documentElement.clientWidth;
+    const width = `${Math.floor(docWidth / 330) * 20}px`;
+    document.querySelector('.video-numbers').style.width = width;
   }
 }
 

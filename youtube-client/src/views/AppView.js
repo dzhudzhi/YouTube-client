@@ -9,9 +9,9 @@ class AppView {
     this.pager = new Pager();
   }
 
-  drawVideoList({ videos, pages }) {
-    this.videoList.draw(videos);
-    this.pager.draw(pages);
+  drawVideoList(data) {
+    this.videoList.draw(data);
+    this.pager.draw();
   }
 }
 

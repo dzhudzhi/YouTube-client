@@ -3,13 +3,23 @@ class VideoList {
     const videoList = document.createElement('div');
     videoList.className = 'carusel';
     document.querySelector('.wrapper').appendChild(videoList);
-  }
-
-  draw(data) {
+    const docWidth = document.documentElement.clientWidth;
+    const width = `${docWidth - (docWidth % 330)}px`;
+    document.querySelector('.carusel').style.width = width;
     const ul = document.createElement('ul');
     ul.className = 'video-list';
+    document.querySelector('.carusel').appendChild(ul);
+  }
+
+  draw({ videos, length }) {
+    const fragment = document.createDocumentFragment();
     const videoItemTemp = document.querySelector('#videoItemTemp');
-    data.forEach((video) => {
+    const videoNumbers = document.querySelector('.video-numbers ul');
+    videos.forEach((video, i) => {
+      const li = document.createElement('li');
+      li.textContent = length + i + 1;
+      videoNumbers.appendChild(li);
+
       const videoClone = videoItemTemp.content.cloneNode(true);
 
       const videoImage = videoClone.querySelector('.video__item-image');
@@ -17,25 +27,28 @@ class VideoList {
       videoImage.alt = video.snippet.title;
 
       const videoTitle = videoClone.querySelector('.video__item-title');
-      videoTitle.textContent = video.snippet.title;
+      const anchor = document.createElement('a');
+      anchor.href = `https://www.youtube.com/watch?v=${video.id}`;
+      anchor.textContent = video.snippet.title;
+      anchor.target = '_blanc';
+      videoTitle.appendChild(anchor);
 
       const videoViews = videoClone.querySelector('.video__item-views');
-      videoViews.textContent = video.statistics.viewCount;
+      videoViews.textContent = `${video.statistics.viewCount} views`;
 
       const videoOwner = videoClone.querySelector('.video__item-owner');
-      videoOwner.textContent = video.snippet.channelTitle;
+      videoOwner.textContent = `Author: ${video.snippet.channelTitle}`;
 
       const videoPublished = videoClone.querySelector('.video__item-published');
-      videoPublished.textContent = video.snippet.publishedAt;
+      videoPublished.textContent = `Published at: ${video.snippet.publishedAt}`;
 
       const videoDescription = videoClone.querySelector('.video__item-description');
       videoDescription.textContent = video.snippet.description;
 
-      ul.appendChild(videoClone);
-    });
+      fragment.appendChild(videoClone);
 
-    document.querySelector('.carusel').innerHTML = '';
-    document.querySelector('.carusel').appendChild(ul);
+      document.querySelector('.video-list').appendChild(fragment);
+    });
   }
 }
 

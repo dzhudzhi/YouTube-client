@@ -3,55 +3,63 @@ import YouTubeAPILoader from './YouTubeAPILoader';
 class AppController extends YouTubeAPILoader {
   constructor() {
     super();
-    this.state = {};
+    const docWidth = document.documentElement.clientWidth;
+    const videosPerPage = Math.floor(docWidth / 330);
+    this.state = {
+      currentIndex: 0,
+      videoItemWidth: 330,
+      videosPerPage,
+      length: 0,
+    };
+    this.x0 = null;
   }
 
-  initState() {
+  setState(currentIndex, videoItemWidth, videosPerPage) {
     this.state = {
-      videos: [],
-      currentIndex: 0,
-      videosPerPage: 3,
+      currentIndex,
+      videoItemWidth,
+      videosPerPage,
+      length: 0,
     };
   }
 
-  prepareData(index) {
-    // const videos = this.state.videos.slice(index, index + this.state.videosPerPage);
-    const { videos } = this.state;
-    const pages = [];
-    for (let i = index; i < videos.length + index; i += 1) {
-      pages.push(i + 1);
+  resize() {
+    const docWidth = document.documentElement.clientWidth;
+    const condition = Math.floor(docWidth / 330) === this.state.videosPerPage;
+    if (!condition) {
+      this.state.videosPerPage = Math.floor(docWidth / 330);
     }
-    return { videos, pages };
   }
 
   getVideosFirst(searchTerm, callback) {
-    this.initState();
     super.getResp(searchTerm, false)
       .then(({ items: videos }) => {
-        this.state.videos = this.state.videos.concat(videos);
-        const { currentIndex } = this.state;
-        callback(this.prepareData(currentIndex));
+        callback({ videos, length: this.state.length });
+        this.state.length += 15;
       });
   }
 
-  getVideosNext() {
+  getVideosNext(callback) {
     super.getResp('', true)
       .then(({ items: videos }) => {
-        this.state.videos = this.state.videos.concat(videos);
+        callback({ videos, length: this.state.length });
+        this.state.length += 15;
       });
   }
 
-  showVideos(direction = 'same', callback) {
+  slideVideos(direction = 'same', callback) {
     switch (direction) {
       case 'next': {
         const index = this.state.currentIndex + this.state.videosPerPage;
         this.state.currentIndex = index;
-        const howClose = this.state.videos.length - index;
+        const howClose = this.state.length - index;
         const timeToLoad = 2 * this.state.videosPerPage + 1;
+        document.querySelector('.video-list').style.marginLeft = `-${index * this.state.videoItemWidth}px`;
+        document.querySelector('.video-numbers ul').style.marginLeft = `-${index * 20}px`;
         if (howClose < timeToLoad) {
-          this.getVideosNext();
+          this.getVideosNext(callback);
         }
-        callback(this.prepareData(index));
+
         break;
       }
       case 'prev': {
@@ -61,13 +69,30 @@ class AppController extends YouTubeAPILoader {
             index = 0;
           }
           this.state.currentIndex = index;
-          callback(this.prepareData(index));
+          document.querySelector('.video-list').style.marginLeft = `-${index * this.state.videoItemWidth}px`;
+          document.querySelector('.video-numbers ul').style.marginLeft = `-${index * 20}px`;
         }
         break;
       }
       default: {
         break;
       }
+    }
+  }
+
+  unify(e) {
+    return e.changedTouches ? e.changedTouches[0] : e;
+  }
+
+  lock(e) {
+    this.x0 = this.unify(e).clientX;
+  }
+
+  move(e, callback) {
+    if (this.x0 || this.x0 === 0) {
+      const dx = this.unify(e).clientX - this.x0;
+      const direction = dx > 0 ? 'prev' : 'next';
+      this.slideVideos(direction, callback);
     }
   }
 }
